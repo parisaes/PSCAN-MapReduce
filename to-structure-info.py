@@ -39,6 +39,6 @@ def WriteToFile(string, fileName):
 
 if __name__ == "__main__":
     output = extractNodeAndStructure(sys.argv[1])
-    fileName =sys.argv[1].split(".")[0] + "-nodeAndStructureInformation.csv"
+    fileName =sys.argv[1].split(".")[0] + "_structure-info.csv"
     WriteToFile(output, fileName)
 
