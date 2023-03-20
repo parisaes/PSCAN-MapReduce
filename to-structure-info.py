@@ -28,7 +28,7 @@ def extractNodeAndStructure(fileName):
             nodeAndStructure+= str(ID) + ","
             #insert adjacencyList
             nodeAndStructure += listToString(list)
-            if (ID < len(adjacencyLists) - 1):
+            if (ID < numberOfNodes - 1):
                 nodeAndStructure += "\n"
     return nodeAndStructure
 
