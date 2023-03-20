@@ -31,8 +31,9 @@ if __name__ == "__main__":
     toAdjacencyLists(inputFilePath + inputFileFormat)
 
     runPCSS(inputFilePath + "_adjacency-lists.csv") # first MapReduce
-    # toStructureInfo(inputFilePath + "_filtered.csv") # initialising structure info
+    toStructureInfo(inputFilePath + "_filtered.csv") # initialising structure info
 
-    while(False):
-        runLPCC(inputFilePath + "_structure-info.csv") # second MapReduce
+    while(True):
+        runLPCC(inputFilePath + "_filtered_structure-info.csv") # second MapReduce
+        break;
 

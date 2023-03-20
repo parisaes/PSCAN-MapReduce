@@ -1,3 +1,7 @@
+from mrjob.job import MRJob
+from mrjob.step import MRStep
+import csv
+
 class LPCC(MRJob):
     
     def steps(self):
@@ -27,14 +31,17 @@ class LPCC(MRJob):
         structureInformation = []
         smallestLabel = float('inf')
         for value in values:
-            if len(value) > 1: # value is the structureInformation
-                structureInformation = value
-            else: # value is a label from the neighbours
+            if isinstance(value, int): # value is a label from the neighbours
                 if value < smallestLabel:
                     smallestLabel = value
+            else: # value is the structureInformation
+                structureInformation = value
         if smallestLabel < structureInformation[1]:
             structureInformation[0] = 1 # setting the status as activated
             structureInformation[1] = smallestLabel
         else:
             structureInformation[0] = 0 # setting the status as inactivated
         yield ID, structureInformation 
+
+if __name__ == "__main__":
+    LPCC.run()
