@@ -47,7 +47,7 @@ if __name__ == "__main__":
     PCSS.run()
     datasetName = sys.argv[1].split("_")[0]
     fileName = datasetName + "_filtered" + ".csv"
-    with open(fileName, mode='w') as file:
+    with open(fileName, mode='w', newline='') as file:
         writer = csv.writer(file)
         for edge in remaining_edges:
             writer.writerow(edge)
