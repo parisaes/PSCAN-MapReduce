@@ -31,7 +31,17 @@ if __name__ == "__main__":
 
     tmpFileName = inputFilePath + "_tmp.txt"
     while(True):
-        runLPCC(SIFileName, tmpFileName) # second MapReduce
-        os.remove(SIFileName)
-        os.rename(tmpFileName, SIFileName)
-        break;
+        bRun = False;
+        with open(SIFileName, 'r') as file:
+            for row in file:
+                row = row.split("\t")
+                status = row[1][1:-1].split(',')[0]
+                if (status == '1'):
+                    bRun = True
+                    break
+        if (bRun):
+            runLPCC(SIFileName, tmpFileName) # second MapReduce
+            os.remove(SIFileName)
+            os.rename(tmpFileName, SIFileName)
+        else:
+            break
