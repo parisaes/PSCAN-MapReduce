@@ -7,20 +7,15 @@ def toAdjacencyLists(file):
     if result.returncode != 0:
         print(result.stderr)
 
-def toStructureInfo(file):
-    command = ['python3', 'to-structure-info.py', file]
-    result = subprocess.run(command, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(result.stderr)
+def runPCSS(inputFileName, outputFileName):
+    command = ['python3', 'pcss.py', inputFileName]
+    with open(outputFileName, 'w') as f:
+        result = subprocess.run(command, text=True, stdout=f)
+        if result.returncode != 0:
+            print(result.stderr)
 
-def runPCSS(fileName):
-    command = ['python3', 'pcss.py', fileName]
-    result = subprocess.run(command, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(result.stderr)
-
-def runLPCC(fileName):
-    command = ['python3', 'lpcc.py', fileName]
+def runLPCC(inputFileName):
+    command = ['python3', 'lpcc.py', inputFileName]
     result = subprocess.run(command, capture_output=True, text=True)
     if result.returncode != 0:
         print(result.stderr)
@@ -30,10 +25,9 @@ if __name__ == "__main__":
     inputFileFormat = ".csv" # TO-DO: command line argument
     toAdjacencyLists(inputFilePath + inputFileFormat)
 
-    runPCSS(inputFilePath + "_adjacency-lists.csv") # first MapReduce
-    toStructureInfo(inputFilePath + "_filtered.csv") # initialising structure info
+    runPCSS(inputFilePath + "_adjacency-lists.csv", inputFilePath + "_si.txt") # first MapReduce
 
-    while(True):
-        runLPCC(inputFilePath + "_filtered_structure-info.csv") # second MapReduce
-        break;
+    # while(True):
+    #     runLPCC(inputFilePath + "_filtered_structure-info.csv") # second MapReduce
+    #     break;
 
