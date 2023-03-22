@@ -6,7 +6,14 @@ def listToString(list, delimeter=","):
     return delimeter.join(strList)
 
 def ExtractAdjacencyLists(fileName):
-    df = pd.read_csv(fileName, delimiter=",", header=None)
+    with open(fileName, 'r') as f:
+        first_line = f.readline().strip() # read the first line of the file
+    if ',' in first_line:
+        delimiter = ','
+    else:
+        delimiter = '\s+'
+
+    df = pd.read_csv(fileName, delimiter=delimiter , header=None)
     numberOfNodes = max(df[0].max(), df[1].max()) + 1 #maxID + 1
 
     adjacencyLists = [[] for i in range(numberOfNodes)] 
