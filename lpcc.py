@@ -1,6 +1,5 @@
 from mrjob.job import MRJob
 from mrjob.step import MRStep
-import csv
 
 class LPCC(MRJob):
     
@@ -12,22 +11,22 @@ class LPCC(MRJob):
 
     #Mapper function
     def LPCCMapper(self, _, file):
-        reader = csv.reader([file])
+        reader = file.split("\n")
         for row in reader:
-            row = [int(item) for item in row]
-            ID = row[0]
-            structureInformation = row[1:]
+            row = row.split("\t")
+            nodeID = int(row[0])
+            structureInformation = [int(item) for item in row[1][1:-1].split(',')]
             status = structureInformation[0]
             label = structureInformation[1]
             adjacencyList = structureInformation[2:]
             if status == 1:
                 for neighbour in adjacencyList:
                     yield neighbour, label
-            yield ID, structureInformation
+            yield nodeID, structureInformation
 
     #Reducer function
     def LPCCReducer(self, key, values):
-        ID = key
+        nodeID = key
         structureInformation = []
         smallestLabel = float('inf')
         for value in values:
@@ -41,7 +40,7 @@ class LPCC(MRJob):
             structureInformation[1] = smallestLabel
         else:
             structureInformation[0] = 0 # setting the status as inactivated
-        yield ID, structureInformation 
+        yield nodeID, structureInformation 
 
 if __name__ == "__main__":
     LPCC.run()

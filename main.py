@@ -14,20 +14,19 @@ def runPCSS(inputFileName, outputFileName):
         if result.returncode != 0:
             print(result.stderr)
 
-def runLPCC(inputFileName):
+def runLPCC(inputFileName, outputFileName):
     command = ['python3', 'lpcc.py', inputFileName]
-    result = subprocess.run(command, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(result.stderr)
+    with open(outputFileName, 'w') as f:
+        result = subprocess.run(command, text=True, stdout=f)
+        if result.returncode != 0:
+            print(result.stderr)
 
 if __name__ == "__main__":
     inputFilePath = sys.argv[1].split(".")[0] # without format
-    inputFileFormat = ".csv" # TO-DO: command line argument
-    toAdjacencyLists(inputFilePath + inputFileFormat)
+    toAdjacencyLists(sys.argv[1])
 
-    runPCSS(inputFilePath + "_adjacency-lists.csv", inputFilePath + "_si.txt") # first MapReduce
-
-    # while(True):
-    #     runLPCC(inputFilePath + "_filtered_structure-info.csv") # second MapReduce
-    #     break;
-
+    SIFileName = inputFilePath + "_si.txt"
+    runPCSS(inputFilePath + "_adjacency-lists.csv", SIFileName) # first MapReduce
+    while(True):
+        runLPCC(SIFileName, inputFilePath + "_tmp.txt") # second MapReduce
+        break;
