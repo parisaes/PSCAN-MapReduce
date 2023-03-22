@@ -1,4 +1,5 @@
 import sys
+import os
 import subprocess
 
 def toAdjacencyLists(file):
@@ -27,6 +28,10 @@ if __name__ == "__main__":
 
     SIFileName = inputFilePath + "_si.txt"
     runPCSS(inputFilePath + "_adjacency-lists.csv", SIFileName) # first MapReduce
+
+    tmpFileName = inputFilePath + "_tmp.txt"
     while(True):
-        runLPCC(SIFileName, inputFilePath + "_tmp.txt") # second MapReduce
+        runLPCC(SIFileName, tmpFileName) # second MapReduce
+        os.remove(SIFileName)
+        os.rename(tmpFileName, SIFileName)
         break;
