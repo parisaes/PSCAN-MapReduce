@@ -2,20 +2,20 @@ from mrjob.job import MRJob
 from mrjob.step import MRStep
 import numpy as np
 import csv
-import sys
 
 threshold = 0.5
-remaining_edges = []
 
 class PCSS(MRJob):
     
     def steps(self):
         return[
             MRStep(mapper = self.PCSSMapper,
-            reducer = self.PCSSReducer)
+            reducer = self.PCSSReducer),
+            MRStep(mapper = self.SIMapper,
+            reducer = self.SIReducer)
         ]
     
-    #Mapper function 
+    # PCSS
     def PCSSMapper(self, _, file):
         reader = csv.reader([file])
         for row in reader:
@@ -24,13 +24,21 @@ class PCSS(MRJob):
             for u in neighbours:
                 yield (min(nodeID, u), max(u, nodeID)), neighbours
             
-    #Reducer function
     def PCSSReducer(self, key, values):
         edgeLists = list(values)
         structural_similarity = StructuralSimilarity(edgeLists[0], edgeLists[1])
         if structural_similarity >= threshold:
-            remaining_edges.append(key)
-            yield key, structural_similarity  
+            yield key[0], key[1] # output the edge
+
+    # Building Structural Info 
+    def SIMapper(self, key, value):
+        yield key, value
+        yield value, key
+            
+    def SIReducer(self, key, values):
+        edgeList = list(values)
+        structureInfo = [1, key] + edgeList
+        yield key, structureInfo  
 
 
 def Intersect(list1, list2):
@@ -45,9 +53,3 @@ def StructuralSimilarity(edgeList1, edgeList2): # assuming no self loops
 
 if __name__ == "__main__":
     PCSS.run()
-    datasetName = sys.argv[1].split("_")[0]
-    fileName = datasetName + "_filtered" + ".csv"
-    with open(fileName, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        for edge in remaining_edges:
-            writer.writerow(edge)
