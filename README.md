@@ -6,10 +6,11 @@ This repository contains an implementation of PSCAN (A Parallel Structural Clust
 PSCAN is a parallel clustering algorithm designed for analyzing large networks. It efficiently detects communities, hubs, and outliers using structural similarity and density-based clustering, optimized for distributed processing systems.
 
 ## Features
-- Computes structural similarity for graph edges.
-- Detects clusters and outliers through density-based methods.
-- Optimized for distributed systems using parallel execution.
-- Modular Python implementation for easy adaptation.
+- Calculates structural similarity for graph edges to identify relationships.
+- Detects clusters, outliers, and hubs through density-based methods.
+- Optimized for large-scale networks with reduced MapReduce job iterations, improving scalability.
+- Parallelized execution using MapReduce to efficiently handle billions of edges.
+- Modular Python implementation for easy adaptation and extension.
 
 ## Reference Paper
 If you use this implementation in your research, please cite the original PSCAN paper:
